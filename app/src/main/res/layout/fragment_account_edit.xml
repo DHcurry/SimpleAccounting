@@ -1,13 +1,133 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="io.github.skywalkerdarren.simpleaccounting.ui.fragment.AccountEditFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <import type="androidx.core.content.ContextCompat" />
+        <variable
+            name="sum"
+            type="java.math.BigDecimal" />
+        <variable
+            name="accountEdit"
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.AccountEditViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/account_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="0.5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/lend_bg_card_view"
+                        android:layout_width="33dp"
+                        android:layout_height="33dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="6dp"
+                        android:padding="4dp"
+                        app:cardBackgroundColor="@{ContextCompat.getColor(context, accountEdit.account.colorId)}"
+                        app:cardCornerRadius="5dp"
+                        app:cardElevation="0dp"
+                        app:contentPadding="4dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.6"
+                        tools:cardBackgroundColor="@color/red">
+
+                        <ImageView
+                            android:id="@+id/account_type_image_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@{accountEdit.account.bitmap}"
+                            tools:src="@drawable/award" />
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/borrow_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="@{accountEdit.account.name}"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/lend_bg_card_view"
+                        app:layout_constraintTop_toTopOf="@+id/lend_bg_card_view"
+                        tools:text="现金" />
+
+                    <EditText
+                        android:id="@+id/balance_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="输入修改金额">
+                    </EditText>
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/lend_hint_text_view"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginStart="8dp"-->
+    <!--                    android:text="@{account.balanceHint}"-->
+    <!--                    android:textSize="12sp"-->
+    <!--                    app:layout_constraintStart_toEndOf="@+id/lend_bg_card_view"-->
+    <!--                    app:layout_constraintTop_toBottomOf="@+id/borrow_text_view"-->
+    <!--                    tools:text="现金余额" />-->
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/submit_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/amber400"
+                    android:text="提交修改"></Button>
+                <Button
+                    android:id="@+id/del"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/red400"
+                    android:text="删除账户"
+                    >
+                </Button>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/account_bill_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#fafafa"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/account_card"
+            tools:listitem="@layout/item_list_account_bill" />
+    </LinearLayout>
+
+</layout>

@@ -8,35 +8,36 @@ import androidx.lifecycle.ViewModelProvider.NewInstanceFactory
 import androidx.lifecycle.ViewModelProviders
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import io.github.skywalkerdarren.simpleaccounting.view_model.*
 
-class ViewModelFactory private constructor(private val mRepository: AppRepository, private val mCurrencyRepo: CurrencyRepo) : NewInstanceFactory() {
+class ViewModelFactory private constructor(private val onlineRepository: OnlineRepository, private val mCurrencyRepo: CurrencyRepo) : NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         when {
             modelClass.isAssignableFrom(AccountViewModel::class.java) -> {
-                return AccountViewModel(mRepository) as T
+                return AccountViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(BillDetailViewModel::class.java) -> {
-                return BillDetailViewModel(mRepository) as T
+                return BillDetailViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(BillEditViewModel::class.java) -> {
-                return BillEditViewModel(mRepository) as T
+                return BillEditViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(BillListViewModel::class.java) -> {
-                return BillListViewModel(mRepository) as T
+                return BillListViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(ClassifyViewModel::class.java) -> {
-                return ClassifyViewModel(mRepository) as T
+                return ClassifyViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(JournalViewModel::class.java) -> {
-                return JournalViewModel(mRepository) as T
+                return JournalViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(ChartViewModel::class.java) -> {
-                return ChartViewModel(mRepository) as T
+                return ChartViewModel(onlineRepository) as T
             }
             modelClass.isAssignableFrom(DiscoveryViewModel::class.java) -> {
-                return DiscoveryViewModel(mRepository, mCurrencyRepo) as T
+                return DiscoveryViewModel(onlineRepository, mCurrencyRepo) as T
             }
             modelClass.isAssignableFrom(EmptyListViewModel::class.java) -> {
                 return EmptyListViewModel() as T
@@ -49,6 +50,12 @@ class ViewModelFactory private constructor(private val mRepository: AppRepositor
             }
             modelClass.isAssignableFrom(CurrencySelectViewModel::class.java) -> {
                 return CurrencySelectViewModel(mCurrencyRepo) as T
+            }
+            modelClass.isAssignableFrom(AccountEditViewModel::class.java)->{
+                return AccountEditViewModel(onlineRepository) as T
+            }
+            modelClass.isAssignableFrom(LoginViewModel::class.java)->{
+                return LoginViewModel(onlineRepository) as T
             }
             else -> throw IllegalArgumentException("no this ViewModel")
         }
@@ -65,7 +72,7 @@ class ViewModelFactory private constructor(private val mRepository: AppRepositor
         fun getInstance(application: Application): ViewModelFactory = INSTANCE
                 ?: synchronized(this) {
                     INSTANCE ?: ViewModelFactory(
-                            InjectorUtils.getAppRepo(application),
+                            InjectorUtils.getOnlineRepo(application),
                             InjectorUtils.getCurrencyRepo(application)
                     ).also { INSTANCE = it }
                 }

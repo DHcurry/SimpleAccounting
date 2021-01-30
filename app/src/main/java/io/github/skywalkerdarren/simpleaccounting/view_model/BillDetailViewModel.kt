@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import io.github.skywalkerdarren.simpleaccounting.util.view.FormatUtil
 import org.joda.time.DateTime
 import java.math.BigDecimal
@@ -16,7 +17,7 @@ import java.util.*
  * @author darren
  * @date 2018/4/4
  */
-class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() {
+class BillDetailViewModel(private val onlineRep: OnlineRepository) : ViewModel() {
     private var mode = 0
     val modeText = MutableLiveData(R.string.monthly_stats)
     val typeImage = MutableLiveData<String>()
@@ -36,7 +37,7 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() 
     val bill = MutableLiveData<Bill?>()
 
     fun start(b: Bill) {
-        mRepository.getBill(b.uuid) {
+        onlineRep.getBill(b.uuid) {
             this.bill.value = it ?: return@getBill
             val month = it.date.monthOfYear
             val year = it.date.year
@@ -59,33 +60,33 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() 
 
     private fun update(bill: Bill?, start: DateTime, end: DateTime) {
         bill ?: return
-        mRepository.getAccount(bill.accountId) {
-            accountName.value = it.name
+        onlineRep.getAccount(bill.accountId) {
+            accountName.value = it?.name
         }
-        mRepository.getType(bill.typeId) { type ->
+        onlineRep.getType(bill.typeId) { type ->
             type?.let { t ->
-                typeImage.value = t.assetsName
+                typeImage.value = t.assetName
                 typeName.value = t.name
                 balanceColor.value = if (t.isExpense) R.color.deeporange800 else R.color.lightgreen700
                 expensePercentHint.value = if (t.isExpense) R.string.expense_percent else R.string.income_percent
-                mRepository.getAccountStats(bill.accountId, start, end) { accountStats ->
+                onlineRep.getAccountStats(bill.accountId, start, end) { accountStats ->
                     accountStats?.let {
                         accountPercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
                     }
                 }
-                mRepository.getBillStats(start, end) { billStats ->
+                onlineRep.getBillStats(start, end) { billStats ->
                     billStats?.let {
                         expensePercent.value = if (t.isExpense) getPercent(bill, it.expense) else getPercent(bill, it.income)
                     }
                 }
             }
         }
-        mRepository.getTypeStats(start, end, bill.typeId) { typeStats ->
+        onlineRep.getTypeStats(start, end, bill.typeId) { typeStats ->
             typeStats?.let {
                 typePercent.value = getPercent(bill, it.balance)
             }
         }
-        mRepository.getTypeAverage(start, end, bill.typeId) { typeStats ->
+        onlineRep.getTypeAverage(start, end, bill.typeId) { typeStats ->
             typeStats?.let {
                 val sub = bill.balance?.subtract(it.balance)?.abs()
                 try {
@@ -163,6 +164,6 @@ class BillDetailViewModel(private val mRepository: AppRepository) : ViewModel() 
     }
 
     fun delBill(billId: UUID) {
-        mRepository.delBill(billId)
+        onlineRep.delBill(billId)
     }
 }

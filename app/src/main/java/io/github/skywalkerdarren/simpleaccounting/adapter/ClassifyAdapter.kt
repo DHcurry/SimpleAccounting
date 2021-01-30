@@ -1,6 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.adapter
 
 import android.animation.Animator
+import android.util.Log
 import android.view.animation.AccelerateDecelerateInterpolator
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.adapter.diff.TypeAndStatsDiff
@@ -36,6 +37,7 @@ class ClassifyAdapter : BaseDataBindingAdapter<TypeAndStats, ItemClassifyBinding
     }
 
     override fun convert(binding: ItemClassifyBinding, item: TypeAndStats) {
+//        Log.d("ClassifyAdapter","convert invoke"+ item)
         binding.stats = item.typeStats
         binding.sum = mSum
         binding.type = item.type

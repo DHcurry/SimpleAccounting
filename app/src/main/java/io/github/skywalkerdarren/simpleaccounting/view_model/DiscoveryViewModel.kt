@@ -10,6 +10,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyAndInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.CurrencyInfo
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.CurrencyRepo
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import io.github.skywalkerdarren.simpleaccounting.util.data.PreferenceUtil
 import io.github.skywalkerdarren.simpleaccounting.util.network.RequestService
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DiscoveryViewModel(private val mRepository: AppRepository, private val currencyRepo: CurrencyRepo) : ViewModel() {
+class DiscoveryViewModel(private val onlineRepo: OnlineRepository, private val currencyRepo: CurrencyRepo) : ViewModel() {
     val defCurrency: MutableLiveData<String> = MutableLiveData("CNY")
     val cumulativeDays = MutableLiveData<String>()
     val monthOfAccountingCounts = MutableLiveData<String>()
@@ -100,9 +101,9 @@ class DiscoveryViewModel(private val mRepository: AppRepository, private val cur
     }
 
     fun start() {
-        mRepository.getBillsCount { sumOfAccountingCounts.value = it.toString() + "单" }
+        onlineRepo.getBillsCount { sumOfAccountingCounts.value = it.toString() + "单" }
         val dateTime = DateTime()
-        mRepository.getBillsCount(dateTime.year, dateTime.monthOfYear) {
+        onlineRepo.getBillsCount(dateTime.year, dateTime.monthOfYear) {
             monthOfAccountingCounts.value = it.toString() + "单"
         }
         monthReport.value = dateTime.monthOfYear.toString() + "月报表"

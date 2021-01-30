@@ -594,7 +594,8 @@
                             android:text="@string/remark"
                             android:textAlignment="center"
                             android:textColor="@android:color/black"
-                            android:textSize="18sp" />
+                            android:textSize="18sp"
+                            tools:ignore="RtlCompat" />
 
                         <Space
                             android:layout_width="8dp"

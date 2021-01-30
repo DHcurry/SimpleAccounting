@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e5bc39b6028095498af6ace76d1ecdfe",
+    "identityHash": "b0dfb1807f59c0b2b6f479ae00dc5ba9",
     "entities": [
       {
         "tableName": "type",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `color_id` INTEGER NOT NULL, `is_expense` INTEGER NOT NULL, `assets_name` TEXT NOT NULL, `uuid` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `color_id` INTEGER NOT NULL, `is_expense` INTEGER NOT NULL, `asset_name` TEXT NOT NULL, `uuid` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -33,8 +33,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "assetsName",
-            "columnName": "assets_name",
+            "fieldPath": "assetName",
+            "columnName": "asset_name",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -301,7 +301,7 @@
       },
       {
         "tableName": "currency_info",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `full_name` TEXT, `full_name_cn` TEXT, `flag_location` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `full_name` TEXT, `full_name_cn` TEXT COLLATE LOCALIZED, `flag_location` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -356,7 +356,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e5bc39b6028095498af6ace76d1ecdfe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b0dfb1807f59c0b2b6f479ae00dc5ba9')"
     ]
   }
 }

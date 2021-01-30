@@ -5,6 +5,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.JsonAdapter
+import io.github.skywalkerdarren.simpleaccounting.util.BooleanTypeAdapter
 import java.io.Serializable
 import java.util.*
 
@@ -19,7 +21,7 @@ data class Type @JvmOverloads constructor(
         @ColumnInfo(name = "name") var name: String,
         @ColumnInfo(name = "color_id") @ColorRes var colorId: Int,
         @ColumnInfo(name = "is_expense") var isExpense: Boolean = false,
-        @ColumnInfo(name = "assets_name") var assetsName: String,
+        @ColumnInfo(name = "asset_name") var assetName: String,
         @ColumnInfo(name = "uuid") var uuid: UUID = UUID.randomUUID()
 ) : Serializable {
     @ColumnInfo(name = "id")

@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository;
 import kotlin.Unit;
 
 /**
@@ -26,10 +27,10 @@ public class JournalViewModel extends ViewModel {
     private final MutableLiveData<BigDecimal> mSum = new MutableLiveData<>(BigDecimal.ZERO);
     private final MutableLiveData<String> mYear = new MutableLiveData<>();
     private final MutableLiveData<List<BillStats>> mStats = new MutableLiveData<>();
-    private final AppRepository mRepository;
+    private final OnlineRepository onlineRepository;
 
-    public JournalViewModel(AppRepository repository) {
-        mRepository = repository;
+    public JournalViewModel(OnlineRepository repository) {
+        onlineRepository = repository;
         mYear.setValue(String.valueOf(DateTime.now().getYear()));
         setStats(Integer.valueOf(Objects.requireNonNull(mYear.getValue())));
     }
@@ -42,7 +43,7 @@ public class JournalViewModel extends ViewModel {
     }
 
     private void setStats(int year) {
-        mRepository.getBillsAnnualStats(year, billsStats -> {
+        onlineRepository.getBillsAnnualStats(year, billsStats -> {
             BigDecimal expense = BigDecimal.ZERO;
             BigDecimal income = BigDecimal.ZERO;
             BigDecimal sum = BigDecimal.ZERO;

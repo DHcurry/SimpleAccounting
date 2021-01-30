@@ -23,15 +23,16 @@ import java.util.List;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.BillStats;
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeStats;
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository;
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository;
 import kotlin.Unit;
 
 public class ChartViewModel extends ViewModel {
-    private final AppRepository mRepository;
+    private final OnlineRepository onlineRepo;
     private final MutableLiveData<BillStats> mBillStats = new MutableLiveData<>();
     private final MutableLiveData<PieData> mPieData = new MutableLiveData<>();
 
-    public ChartViewModel(AppRepository repository) {
-        mRepository = repository;
+    public ChartViewModel(OnlineRepository repository) {
+        onlineRepo = repository;
     }
 
     public LiveData<BillStats> getBillStats() {
@@ -45,11 +46,17 @@ public class ChartViewModel extends ViewModel {
     public void start(DateTime startDateTime, DateTime endDateTime, boolean isExpense, Context context) {
         List<PieEntry> pieEntries = new ArrayList<>(10);
         List<Integer> colorList = new ArrayList<>(10);
-        mRepository.getTypesStats(startDateTime, endDateTime, isExpense, typesStats -> {
+        onlineRepo.getTypesStats(startDateTime, endDateTime, isExpense, typesStats -> {
             for (TypeStats stats : typesStats) {
-                mRepository.getType(stats.getTypeId(), type -> {
+                onlineRepo.getType(stats.getTypeId(), type -> {
                     PieEntry entry = new PieEntry(stats.getBalance().floatValue(), type.getName());
-                    colorList.add(ContextCompat.getColor(context, type.getColorId()));
+                    int color = 0;
+                    try {
+                        color = ContextCompat.getColor(context, type.getColorId());
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    colorList.add(color);
                     pieEntries.add(entry);
                     PieDataSet pieDataSet = getPieDataSet(pieEntries, colorList);
                     pieDataSet.notifyDataSetChanged();
@@ -61,7 +68,7 @@ public class ChartViewModel extends ViewModel {
             }
             return Unit.INSTANCE;
         });
-        mRepository.getBillStats(startDateTime, endDateTime, billStats -> {
+        onlineRepo.getBillStats(startDateTime, endDateTime, billStats -> {
             mBillStats.setValue(billStats);
             return Unit.INSTANCE;
         });

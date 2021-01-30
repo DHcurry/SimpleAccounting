@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="androidx.core.content.ContextCompat" />
+
+        <variable
+            name="addAccount"
+            type="io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel">
+        </variable>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="用户名">
+            </TextView>
+            <EditText
+                android:id="@+id/username"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="text">
+            </EditText>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="密码">
+            </TextView>
+            <EditText
+                android:id="@+id/password"
+                android:selectAllOnFocus="true"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:inputType="text">
+            </EditText>
+            <Button
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
+                android:background="@color/amber400"
+                android:text="登录/注册">
+            </Button>
+            <TextView
+                android:id="@+id/suc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="@{addAccount.res}"
+                tools:text="@string/loading">
+            </TextView>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

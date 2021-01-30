@@ -31,9 +31,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.activity.LoginActivity"
+            android:label="登录"/>
+<!--            android:launchMode="singleTop"/>-->
         <activity
             android:name=".ui.activity.MainActivity"
-            android:label="@string/title_activity_bill"
+            android:label="@string/title_activity_bill"/>
             android:launchMode="singleTop" />
         <activity
             android:name=".ui.activity.BillDetailActivity"
@@ -43,7 +46,9 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".ui.activity.StatsActivity" />
         <activity android:name=".ui.activity.MyAccountActivity" />
-
+        <activity android:name=".ui.activity.AccountAddActivity"/>
+        <activity android:name=".ui.activity.AccountEditActivity"/>
+        <activity android:name=".ui.activity.ClassifyDetailActivity"/>
         <receiver android:name=".ui.DesktopWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

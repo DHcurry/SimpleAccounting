@@ -1,9 +1,12 @@
 package io.github.skywalkerdarren.simpleaccounting.view_model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import io.github.skywalkerdarren.simpleaccounting.model.entity.BillInfo
 import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeAndStats
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import org.joda.time.DateTime
 import org.joda.time.Period
 
@@ -13,7 +16,10 @@ import org.joda.time.Period
  * @author darren
  * @date 2018/4/6
  */
-class ClassifyViewModel(private val mRepository: AppRepository) : ViewModel() {
+class ClassifyViewModel(private val onlineRepo: OnlineRepository) : ViewModel() {
+
+    lateinit var typeAndStats : TypeAndStats
+    var billList =  MutableLiveData<List<BillInfo>>()
 
     val date = MutableLiveData<String>()
     val typeAndStatsList = MutableLiveData<List<TypeAndStats>>()
@@ -26,6 +32,7 @@ class ClassifyViewModel(private val mRepository: AppRepository) : ViewModel() {
 
 
     fun setDate(start: DateTime, end: DateTime) {
+
         this.end = end
         this.start = start
         mPeriod = Period(this.start, this.end)
@@ -37,17 +44,24 @@ class ClassifyViewModel(private val mRepository: AppRepository) : ViewModel() {
     }
 
     private fun setStatsList(start: DateTime, end: DateTime, isExpense: Boolean) {
+        Log.d("ClassifyViewModel","start="+start+" end="+end)
         val pattern = "yyyy年MM月dd日"
         date.value = start.toString(pattern) + " - " + end.toString(pattern)
-        mRepository.getTypes(isExpense) { types ->
+        onlineRepo.getTypes(isExpense) { types ->
             types ?: return@getTypes
-            mRepository.getTypesStats(start, end, isExpense) { typesStats ->
+            onlineRepo.getTypesStats(start, end, isExpense) { typesStats ->
                 typesStats ?: return@getTypesStats
                 typeAndStatsList.value = typesStats.map { typeStats ->
                     TypeAndStats(types.find { it.uuid == typeStats.typeId }
                             ?: return@getTypesStats, typeStats)
                 }
             }
+        }
+    }
+
+    fun getTypeBill(typeAndStats: TypeAndStats){
+        onlineRepo.getTypeBills(typeAndStats, start, end){
+            billList.value = it
         }
     }
 

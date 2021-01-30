@@ -107,7 +107,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:contentDescription="@string/type_image"
-                    android:src="@{edit.type.assetsName}"
+                    android:src="@{edit.type.assetName}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

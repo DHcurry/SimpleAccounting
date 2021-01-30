@@ -20,6 +20,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/account_all_card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"

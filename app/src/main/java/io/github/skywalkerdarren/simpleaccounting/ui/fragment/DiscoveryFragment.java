@@ -68,9 +68,9 @@ public class DiscoveryFragment extends BaseFragment {
             startActivity(intent);
         });
 
-        mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        mBinding.currencyMenu.setOnClickListener(v -> createPopupMenu(mBinding.currencyMenu));
+//        mBinding.exchangeRateRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+//
+//        mBinding.currencyMenu.setOnClickListener(v -> createPopupMenu(mBinding.currencyMenu));
 
         ViewPager viewPager = mBinding.showPager;
         mDotLayout = mBinding.dotLayout;
@@ -178,10 +178,10 @@ public class DiscoveryFragment extends BaseFragment {
             mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_RIGHT);
         }
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemDragAndSwipeCallback(mAdapter));
-        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
+//        itemTouchHelper.attachToRecyclerView(mBinding.exchangeRateRecyclerView);
         mAdapter.enableDragItem(itemTouchHelper);
         mAdapter.setDuration(100);
-        mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
+//        mBinding.exchangeRateRecyclerView.setAdapter(mAdapter);
 
         mViewModel.getFavoriteCurrencies().observe(getViewLifecycleOwner(),
                 currencies -> {

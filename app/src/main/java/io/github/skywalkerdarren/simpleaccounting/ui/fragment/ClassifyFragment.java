@@ -24,11 +24,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+import java.util.UUID;
+
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.adapter.ClassifyAdapter;
 import io.github.skywalkerdarren.simpleaccounting.base.BaseFragment;
 import io.github.skywalkerdarren.simpleaccounting.databinding.EmptyStatsBinding;
 import io.github.skywalkerdarren.simpleaccounting.databinding.FragmentClassifyBinding;
+import io.github.skywalkerdarren.simpleaccounting.model.entity.TypeAndStats;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.ClassifyDetailActivity;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.ClassifyViewModel;
 
@@ -103,9 +108,17 @@ public class ClassifyFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel.getTypeAndStatsList().observe(getViewLifecycleOwner(), typeAndStats -> {
-            mClassifyAdapter.setNewList(typeAndStats);
-        });
+        mViewModel.getTypeAndStatsList().observe(getViewLifecycleOwner(),this::updateAdapter);
+    }
+
+    private void updateAdapter(List<TypeAndStats> typeAndStats){
+        mClassifyAdapter.setNewList(typeAndStats);
+        mClassifyAdapter.setOnItemClickListener((adapter,view,pos)->{
+            System.out.println(adapter.getData().get(pos));
+            TypeAndStats stats =  (TypeAndStats)adapter.getData().get(pos);
+            Intent intent = ClassifyDetailActivity.newIntent(requireContext(), stats, mViewModel);
+            startActivity(intent);
+                });
     }
 
     private void customDialog() {

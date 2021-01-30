@@ -2,6 +2,7 @@ package io.github.skywalkerdarren.simpleaccounting.model.entity
 
 import androidx.room.*
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import java.io.Serializable
 import java.math.BigDecimal
 import java.util.*
@@ -25,7 +26,7 @@ import java.util.*
 data class Bill @JvmOverloads constructor(
         @ColumnInfo(name = "type_id") var typeId: UUID,
         @ColumnInfo(name = "account_id") var accountId: UUID,
-        @ColumnInfo(name = "date") var date: DateTime = DateTime.now(),
+        @ColumnInfo(name = "date") var date: DateTime = DateTime.now(DateTimeZone.forID("+08:00")),
         @ColumnInfo(name = "name") var name: String,
         @ColumnInfo(name = "balance") var balance: BigDecimal? = null,
         @ColumnInfo(name = "remark") var remark: String? = null,

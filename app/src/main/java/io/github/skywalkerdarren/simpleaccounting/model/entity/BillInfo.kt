@@ -22,8 +22,8 @@ data class BillInfo @JvmOverloads constructor(
         val title: String? = null,
         val remark: String? = null,
         val balance: String? = null,
-        val isExpense: Boolean = false,
-        val billTypeRes: String? = null,
+        var isExpense: Boolean = false,
+        var billTypeRes: String? = null,
 
         val income: String? = null,
         val expense: String? = null,
@@ -42,7 +42,7 @@ data class BillInfo @JvmOverloads constructor(
             remark = bill.remark,
             balance = FormatUtil.getNumeric(bill.balance),
             isExpense = type.isExpense,
-            billTypeRes = type.assetsName,
+            billTypeRes = type.assetName,
             dateTime = bill.date
     )
 

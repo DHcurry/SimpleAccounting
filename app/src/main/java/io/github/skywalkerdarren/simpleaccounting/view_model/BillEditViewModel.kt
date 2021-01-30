@@ -9,6 +9,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.entity.Account
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Bill
 import io.github.skywalkerdarren.simpleaccounting.model.entity.Type
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import org.joda.time.DateTime
 import java.math.BigDecimal
 
@@ -16,7 +17,7 @@ import java.math.BigDecimal
  * @author darren
  * @date 2018/4/4
  */
-class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
+class BillEditViewModel(private val onlineRepo: OnlineRepository) : ViewModel() {
 
     val isExpense = MutableLiveData<Boolean>(true)
     val types = Transformations.switchMap(isExpense) {
@@ -26,6 +27,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             incomeTypes
         }
     }
+
     val balance = MutableLiveData<String?>()
     val bill = MutableLiveData<Bill>()
     var type = MutableLiveData<Type>()
@@ -45,10 +47,10 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
     fun setBill(b: Bill?) {
         // empty bill
         if (b == null) {
-            mRepository.getAccounts {
+            onlineRepo.getAccounts {
                 val account = it?.get(0) ?: return@getAccounts
                 this@BillEditViewModel.account.value = account
-                mRepository.getTypes(true) { types ->
+                onlineRepo.getTypes(true) { types ->
                     val type = types?.get(0) ?: return@getTypes
                         this@BillEditViewModel.type.value = type
                         bill.value = Bill(type.uuid, account.uuid, DateTime(), type.name)
@@ -56,8 +58,8 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             }
         } else {
             bill.value = b
-            mRepository.getAccount(b.accountId) { this@BillEditViewModel.account.value = it }
-            mRepository.getType(b.typeId) { type ->
+            onlineRepo.getAccount(b.accountId) { this@BillEditViewModel.account.value = it }
+            onlineRepo.getType(b.typeId) { type ->
                 this@BillEditViewModel.type.value = type ?: return@getType
             }
             balance.value = if (b.balance == null) null else b.balance.toString()
@@ -71,7 +73,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
         val finalBill = bill.value
         val finalAccount = account.value
         val finalType = type.value
-
+        // 判断账单是否为空
         if (TextUtils.isEmpty(balance.value) ||
                 finalBill == null ||
                 finalAccount == null ||
@@ -83,6 +85,7 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
         finalBill.accountId = finalAccount.uuid
         finalBill.typeId = finalType.uuid
         finalBill.name = finalType.name
+
         return try {
             val r = BigDecimal(balance.value)
             if (r == BigDecimal.ZERO) {
@@ -92,13 +95,13 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
             finalBill.balance = r
 
             // 刷新账单数据库
-            mRepository.getBill(finalBill.uuid) {
+            onlineRepo.getBill(finalBill.uuid) {
                 if (it == null) {
-                    mRepository.addBill(finalBill)
+                    onlineRepo.addBill(finalBill)
                 } else {
                     finalBill.id = it.id
                     finalBill.uuid = it.uuid
-                    mRepository.updateBill(finalBill)
+                    onlineRepo.updateBill(finalBill)
                 }
             }
             true
@@ -121,13 +124,13 @@ class BillEditViewModel(private val mRepository: AppRepository) : ViewModel() {
     }
 
     init {
-        mRepository.getTypes(true) {
+        onlineRepo.getTypes(true) {
             expenseTypes.value = it
         }
-        mRepository.getTypes(false) {
+        onlineRepo.getTypes(false) {
             incomeTypes.value = it
         }
-        mRepository.getAccounts {
+        onlineRepo.getAccounts {
             this@BillEditViewModel.accounts.value = it
         }
     }
