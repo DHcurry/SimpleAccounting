@@ -26,6 +26,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class JavaAccountService {
+    public int uid;
+
     public static final MediaType JSONTpye
             = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
@@ -35,7 +37,7 @@ public class JavaAccountService {
             .create();
 
     public List<Account> getAccounts(String baseUrl) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/accounts").build();
+        Request request = new Request.Builder().url(baseUrl + "/accounts"+"?uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         List<Account> accounts = JSON.fromJson(body, new TypeToken<List<Account>>(){}.getType());
@@ -45,7 +47,7 @@ public class JavaAccountService {
 
     @Nullable
     public Account getAccount(@NotNull String baseUrl, @NotNull UUID uuid) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/account?uuid="+uuid).build();
+        Request request = new Request.Builder().url(baseUrl + "/account?uuid="+uuid+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         Account account = JSON.fromJson(body, Account.class);
@@ -55,7 +57,9 @@ public class JavaAccountService {
     public void updateAccountId(String baseUrl,@NotNull UUID uuid, int i) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
                 .add("uuid",uuid.toString())
-                .add("id",String.valueOf(i)).build();
+                .add("id",String.valueOf(i))
+                .add("uid",String.valueOf(uid))
+                .build();
         Request request = new Request.Builder().url(baseUrl + "/changeId").post(requestBody).build();
         Response response = client.newCall(request).execute();
     }
@@ -63,7 +67,9 @@ public class JavaAccountService {
     public String updateAccountBalance(String baseUrl, @NotNull UUID uuid, @Nullable BigDecimal balance) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
                 .add("uuid",uuid.toString())
-                .add("balance",balance.toEngineeringString()).build();
+                .add("balance",balance.toEngineeringString())
+                .add("uid",String.valueOf(uid))
+                .build();
         Request request = new Request.Builder().url(baseUrl + "/changeAccountBalance").post(requestBody).build();
         Response response = client.newCall(request).execute();
         return response.body().string();
@@ -73,7 +79,9 @@ public class JavaAccountService {
         RequestBody requestBody = new FormBody.Builder()
                 .add("name",name)
                 .add("hint",hint)
-                .add("balance",balance).build();
+                .add("balance",balance)
+                .add("uid",String.valueOf(uid))
+                .build();
         Request request = new Request.Builder().url(baseUrl+"/addAccount").post(requestBody).build();
         Response response = client.newCall(request).execute();
         return response.body().string();
@@ -82,7 +90,9 @@ public class JavaAccountService {
     @NotNull
     public String delAccount(@NotNull String baseUrl, @NotNull UUID uuid) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
-                .add("uuid",uuid.toString()).build();
+                .add("uuid",uuid.toString())
+                .add("uid",String.valueOf(uid))
+                .build();
         Request request = new Request.Builder().url(baseUrl+"/delAccount").post(requestBody).build();
         Response response = client.newCall(request).execute();
         return response.body().string();

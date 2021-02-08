@@ -24,6 +24,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class TypeService {
+    public int uid;
     public static final MediaType JSONTpye
             = MediaType.get("application/json; charset=utf-8");
     OkHttpClient client = new OkHttpClient();
@@ -43,7 +44,7 @@ public class TypeService {
 
     @Nullable
     public TypeStats getTypeStats(@NotNull String baseUrl, @NotNull DateTime start, @NotNull DateTime end, @NotNull UUID typeId) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/typeStatus?typeId="+typeId+"&start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/typeStatus?typeId="+typeId+"&start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         TypeStats typeStats = JSON.fromJson(body,TypeStats.class);
@@ -52,7 +53,7 @@ public class TypeService {
 
     @Nullable
     public TypeStats getTypeAverageStats(@NotNull String baseUrl, @NotNull DateTime start, @NotNull DateTime end, @NotNull UUID typeId) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/typeAverageStatus?typeId="+typeId+"&start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/typeAverageStatus?typeId="+typeId+"&start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         TypeStats typeStats = JSON.fromJson(body,TypeStats.class);

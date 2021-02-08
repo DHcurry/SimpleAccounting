@@ -117,8 +117,14 @@ public class AccountEditFragment extends Fragment {
 //        updateAdapter(mViewModel.getBillInfos().getValue());
         mBinding.setAccountEdit(mViewModel);
         mBinding.setLifecycleOwner(getViewLifecycleOwner());
-        mBinding.submitEdit.setOnClickListener(listener -> mViewModel.submitChange(mAccount.getUuid(), text.getText().toString()));
-        mBinding.del.setOnClickListener(lis->mViewModel.delAccount(mAccount.getUuid()));
+        mBinding.submitEdit.setOnClickListener(listener -> {
+            mViewModel.submitChange(mAccount.getUuid(), text.getText().toString());
+            getActivity().finish();
+        });
+        mBinding.del.setOnClickListener(lis->{
+            mViewModel.delAccount(mAccount.getUuid());
+            getActivity().finish();
+        });
         mViewModel.getBills(mAccount.getUuid());
         mViewModel.getBillLiveData().observe(getViewLifecycleOwner(),this::updateAdapter);
     }

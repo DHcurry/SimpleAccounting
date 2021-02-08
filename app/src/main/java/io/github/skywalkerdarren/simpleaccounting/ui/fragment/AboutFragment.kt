@@ -51,14 +51,14 @@ class AboutFragment : Fragment() {
 
         binding.sourceCodeLayout.setOnClickListener {
             val intent = Intent()
-            intent.data = Uri.parse("https://github.com/SkywalkerDarren/SimpleAccounting")
+            intent.data = Uri.parse("https://github.com/DHcurry/SimpleAccounting")
             intent.action = Intent.ACTION_VIEW
             startActivity(intent)
         }
 
         binding.myRepoLayout.setOnClickListener {
             val intent = Intent()
-            intent.data = Uri.parse("https://github.com/SkywalkerDarren")
+            intent.data = Uri.parse("hhttps://github.com/DHcurry/")
             intent.action = Intent.ACTION_VIEW
             startActivity(intent)
         }

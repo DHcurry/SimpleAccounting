@@ -76,6 +76,7 @@ public class AccountAddFragment extends Fragment {
                 String b = String.valueOf(balance.getText());
                 Log.d("AccountAddFragment","balance="+b);
                 mViewModel.addAccount(n,h,b);
+                getActivity().finish();
             }
         });
     }

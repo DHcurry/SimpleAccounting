@@ -6,7 +6,13 @@ import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineReposit
 
 class LoginViewModel(private val onlineRepo : OnlineRepository) : ViewModel() {
     fun login(username: String, password: String) {
-        onlineRepo
+        onlineRepo.login(username,password) {
+            onlineRepo.uid = it;
+            onlineRepo.accountService.uid = it;
+            onlineRepo.billService.uid = it;
+            onlineRepo.statusService.uid = it;
+            onlineRepo.typeService.uid = it;
+        }
     }
 
 }

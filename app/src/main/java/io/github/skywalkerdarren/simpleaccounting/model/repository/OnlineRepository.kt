@@ -5,27 +5,26 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import io.github.skywalkerdarren.simpleaccounting.adapter.DateHeaderDivider
 import io.github.skywalkerdarren.simpleaccounting.model.entity.*
-import io.github.skywalkerdarren.simpleaccounting.model.service.BillService
-import io.github.skywalkerdarren.simpleaccounting.model.service.JavaAccountService
-import io.github.skywalkerdarren.simpleaccounting.model.service.JavaStatusService
-import io.github.skywalkerdarren.simpleaccounting.model.service.TypeService
+import io.github.skywalkerdarren.simpleaccounting.model.service.*
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
 import org.joda.time.DateTime
 import java.math.BigDecimal
 import java.util.*
 
 class OnlineRepository private constructor(val executors: AppExecutors, context: Context) {
-    var baseUrl = "http://114.116.237.243:8082";
-//      var baseUrl = "http://10.0.2.2:8082";
+//    var baseUrl = "http://114.116.237.243:8082";
+      var baseUrl = "http://10.0.2.2:8082";
+    var uid = 0;
     val accountService:JavaAccountService = JavaAccountService();
     val statusService:JavaStatusService = JavaStatusService();
     val billService: BillService = BillService();
     val typeService:TypeService = TypeService();
+    val loginService:LoginService = LoginService();
 
     private fun slowDown() {
         if (OnlineRepository.DEBUG) {
             try {
-                Thread.sleep(1000)
+                Thread.sleep(10)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             }
@@ -361,6 +360,17 @@ class OnlineRepository private constructor(val executors: AppExecutors, context:
             executors.mainThread().execute { callBack(billList)}
         }
 
+    }
+
+    /**
+     * 用户登录
+     */
+    fun login(username: String, password: String, callBack: (uid: Int) -> Unit){
+        execute {
+            var uid = loginService.login(baseUrl,username,password);
+            Log.d(TAG, "login: uid"+uid)
+            executors.mainThread().execute{callBack(uid)}
+        }
     }
 
     private fun updateAccountBalanceByAdd(bill: Bill) {

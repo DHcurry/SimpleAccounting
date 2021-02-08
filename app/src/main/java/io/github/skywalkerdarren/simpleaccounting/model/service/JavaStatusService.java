@@ -28,6 +28,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class JavaStatusService {
+
+    public int uid;
     OkHttpClient client = new OkHttpClient();
 
     Gson JSON = new GsonBuilder().registerTypeAdapter(Boolean.TYPE,new BooleanTypeAdapter())
@@ -35,9 +37,10 @@ public class JavaStatusService {
             .create();
 
     public List<Stats> getBillsStats(String baseUrl, DateTime start, DateTime end) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/billstatus?start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/billstatus?start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
+        Log.d("JavaStatusService", "uid = "+uid);
 //        Log.d("JavaStatusService", "getBillsStats: body="+body);
 //        List<BillStats> billStats = JSON.fromJson(body,new TypeToken<List<BillStats>>(){}.getType());
         List<JsonObject> objects = JSON.fromJson(body, new TypeToken<List<JsonObject>>(){}.getType());
@@ -51,7 +54,8 @@ public class JavaStatusService {
 
     @NotNull
     public List<Stats> getAccountStats(String baseUrl,@NotNull UUID accountId, @NotNull DateTime start, @NotNull DateTime end) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/accountStatus?start="+start+"&end="+end+"&accountId="+accountId).build();
+        Request request = new Request.Builder().url(baseUrl + "/accountStatus?start="+start+"&end="+end+"&accountId="+accountId+"&uid="+uid).build();
+        Log.d("JavaStatusService", "uid = "+uid);
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         List<Stats> stats = JSON.fromJson(body,new TypeToken<List<Stats>>(){}.getType());
@@ -61,7 +65,7 @@ public class JavaStatusService {
     @Nullable
     public List<TypeStats> getTypesStats(@NotNull String baseUrl, @NotNull DateTime start, @NotNull DateTime end, boolean expense) throws IOException {
         int intExpense = expense?1:0;
-        Request request = new Request.Builder().url(baseUrl + "/typesStatus?start="+start+"&end="+end+"&expense="+intExpense).build();
+        Request request = new Request.Builder().url(baseUrl + "/typesStatus?start="+start+"&end="+end+"&expense="+intExpense+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         List<TypeStats> stats = JSON.fromJson(body,new TypeToken<List<TypeStats>>(){}.getType());

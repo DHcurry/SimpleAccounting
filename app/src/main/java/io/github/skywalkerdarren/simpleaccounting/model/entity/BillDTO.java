@@ -83,4 +83,17 @@ public class BillDTO {
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
     }
+
+    @Override
+    public String toString() {
+        return "BillDTO{" +
+                "typeId=" + typeId +
+                ", accountId=" + accountId +
+                ", date='" + date + '\'' +
+                ", name='" + name + '\'' +
+                ", balance=" + balance +
+                ", remark='" + remark + '\'' +
+                ", uuid=" + uuid +
+                '}';
+    }
 }

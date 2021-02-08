@@ -1,5 +1,7 @@
 package io.github.skywalkerdarren.simpleaccounting.ui.fragment;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,9 +18,13 @@ import androidx.fragment.app.Fragment;
 import io.github.skywalkerdarren.simpleaccounting.R;
 import io.github.skywalkerdarren.simpleaccounting.databinding.LoginBinding;
 import io.github.skywalkerdarren.simpleaccounting.ui.activity.LoginActivity;
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.MainActivity;
+import io.github.skywalkerdarren.simpleaccounting.util.SharedPreferencesUtil;
 import io.github.skywalkerdarren.simpleaccounting.util.ViewModelFactory;
 import io.github.skywalkerdarren.simpleaccounting.view_model.AccountViewModel;
 import io.github.skywalkerdarren.simpleaccounting.view_model.LoginViewModel;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class LoginFragment extends Fragment {
 
@@ -55,15 +61,30 @@ public class LoginFragment extends Fragment {
         button = getActivity().findViewById(R.id.submit);
         username = mBinding.username;
         password = mBinding.password;
+        // 获取本地内容username 和 password
+        SharedPreferencesUtil.getSharedPre("userInfo",getActivity());
+        String us = SharedPreferencesUtil.get("username");
+        String p = SharedPreferencesUtil.get("password");
+        if(us != null && p != null){
+            mViewModel.login(us,p);
+            Intent intent = MainActivity.newIntent(getContext());
+            startActivity(intent);
+            getActivity().finish();
+        }
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String un = String.valueOf(username.getText());
                 String pw = String.valueOf(password.getText());
                 mViewModel.login(un,pw);
+                SharedPreferencesUtil.getSharedPre("userInfo",getActivity());
+                SharedPreferencesUtil.save("username",un);
+                SharedPreferencesUtil.save("password",pw);
+                Intent intent = MainActivity.newIntent(getContext());
+                startActivity(intent);
+                getActivity().finish();
             }
         });
     }
-
 
 }

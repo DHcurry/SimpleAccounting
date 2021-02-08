@@ -9,11 +9,16 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import io.github.skywalkerdarren.simpleaccounting.R
 import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository.Companion.getInstance
+import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import io.github.skywalkerdarren.simpleaccounting.ui.DesktopWidget
+import io.github.skywalkerdarren.simpleaccounting.ui.activity.LoginActivity
 import io.github.skywalkerdarren.simpleaccounting.util.AppExecutors
+import io.github.skywalkerdarren.simpleaccounting.util.InjectorUtils
+import io.github.skywalkerdarren.simpleaccounting.util.SharedPreferencesUtil
 import kotlinx.android.synthetic.main.fragment_my_account.*
 
 class MyAccountFragment : Fragment() {
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_my_account, container, false)
@@ -37,7 +42,7 @@ class MyAccountFragment : Fragment() {
         delete_all_card_view.setOnClickListener {
             AlertDialog.Builder(requireContext())
                     .setCancelable(true)
-                    .setMessage("是否删除所有账单，删除后的账单将无法恢复！")
+                    .setMessage("是否退出登陆？")
                     .setTitle("警告")
                     .setPositiveButton(android.R.string.ok) { _: DialogInterface?, _: Int ->
                         getInstance(AppExecutors(), requireContext()).clearBill()
@@ -45,6 +50,12 @@ class MyAccountFragment : Fragment() {
                     }
                     .create()
                     .show()
+            var intent = LoginActivity.newIntent(context);
+            SharedPreferencesUtil.getSharedPre("userInfo",activity);
+            SharedPreferencesUtil.save("username",null);
+            SharedPreferencesUtil.save("password",null);
+            startActivity(intent)
+            activity?.finish()
         }
     }
 

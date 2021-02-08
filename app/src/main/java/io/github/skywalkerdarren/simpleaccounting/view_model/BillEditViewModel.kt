@@ -12,6 +12,7 @@ import io.github.skywalkerdarren.simpleaccounting.model.repository.AppRepository
 import io.github.skywalkerdarren.simpleaccounting.model.repository.OnlineRepository
 import org.joda.time.DateTime
 import java.math.BigDecimal
+import java.util.*
 
 /**
  * @author darren
@@ -85,7 +86,6 @@ class BillEditViewModel(private val onlineRepo: OnlineRepository) : ViewModel() 
         finalBill.accountId = finalAccount.uuid
         finalBill.typeId = finalType.uuid
         finalBill.name = finalType.name
-
         return try {
             val r = BigDecimal(balance.value)
             if (r == BigDecimal.ZERO) {

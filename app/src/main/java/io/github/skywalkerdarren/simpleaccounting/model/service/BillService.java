@@ -31,6 +31,8 @@ import okhttp3.Response;
 
 public class BillService {
 
+    public int uid;
+
     public static final MediaType JSONTpye
             = MediaType.get("application/json; charset=utf-8");
 
@@ -44,7 +46,7 @@ public class BillService {
 
     @Nullable
     public Bill getBill(@NotNull String baseUrl,@NotNull UUID uuid) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/bill?uuid="+uuid).build();
+        Request request = new Request.Builder().url(baseUrl + "/bill?uuid="+uuid+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         Bill bill = JSON.fromJson(body, Bill.class);
@@ -54,15 +56,16 @@ public class BillService {
     public void delBill(String baseUrl,@NotNull UUID uuid) throws IOException {
         RequestBody requestBody = new FormBody.Builder()
                 .add("uuid",uuid.toString()).build();
-        Request request = new Request.Builder().url(baseUrl + "/delBill").post(requestBody).build();
+        Request request = new Request.Builder().url(baseUrl + "/delBill"+"?uid="+uid).post(requestBody).build();
         Response response = client.newCall(request).execute();
     }
 
     @NotNull
     public List<Bill> getsBillsByDate(String baseUrl,@NotNull DateTime start, @Nullable DateTime end) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/bills?start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/bills?start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
+        Log.d("BillService", "getsBillsByDate: "+body);
         List<JsonObject> objects = JSON.fromJson(body, new TypeToken<List<JsonObject>>(){}.getType());
         List<Bill> reuslt = new ArrayList<>();
         for(JsonObject object : objects){
@@ -73,9 +76,10 @@ public class BillService {
 
     public void addBill(@NotNull String baseUrl, @NotNull Bill bill) throws IOException {
         BillDTO billDTO = new BillDTO(bill);
+        Log.d("BillService", "addBill: "+billDTO);
         String json = JSON.toJson(billDTO);
         RequestBody requestBody = RequestBody.create(json,JSONTpye);
-        Request request = new Request.Builder().url(baseUrl + "/addBill").post(requestBody).build();
+        Request request = new Request.Builder().url(baseUrl + "/addBill"+"?uid="+uid).post(requestBody).build();
         Response response = client.newCall(request).execute();
     }
 
@@ -91,14 +95,14 @@ public class BillService {
         if(billsCount != 0){
             return billsCount;
         }
-        Request request = new Request.Builder().url(baseUrl + "/billsCount?").build();
+        Request request = new Request.Builder().url(baseUrl + "/billsCount?"+"uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         return Integer.valueOf(body);
     }
 
     public int getBillsCount(@NotNull String baseUrl, @NotNull DateTime start, @Nullable DateTime end) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/billsCountByData?start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/billsCountByData?start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         return Integer.valueOf(body);
@@ -106,7 +110,7 @@ public class BillService {
 
     @NotNull
     public List<BillInfo> getBillByAccount(@NotNull String baseUrl, @NotNull UUID accountId) throws IOException {
-        Request request = new Request.Builder().url(baseUrl + "/billsByAccount?accountId="+accountId).build();
+        Request request = new Request.Builder().url(baseUrl + "/billsByAccount?accountId="+accountId+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         List<JsonObject> objects = JSON.fromJson(body, new TypeToken<List<JsonObject>>(){}.getType());
@@ -120,7 +124,7 @@ public class BillService {
     @NotNull
     public List<BillInfo> getTypeBills(@NotNull String baseUrl, @NotNull TypeAndStats typeAndStats, @NotNull DateTime start, @NotNull DateTime end) throws IOException {
         String typeId = typeAndStats.getTypeStats().getTypeId().toString();
-        Request request = new Request.Builder().url(baseUrl + "/billsByType?typeId="+typeId+"&start="+start+"&end="+end).build();
+        Request request = new Request.Builder().url(baseUrl + "/billsByType?typeId="+typeId+"&start="+start+"&end="+end+"&uid="+uid).build();
         Response response = client.newCall(request).execute();
         String body = response.body().string();
         List<JsonObject> objects = JSON.fromJson(body, new TypeToken<List<JsonObject>>(){}.getType());

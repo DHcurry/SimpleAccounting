@@ -66,7 +66,7 @@
     <string name="bill_search">账单查询</string>
     <string name="bill_io">账单导入导出</string>
     <string name="my_setting">我的设置</string>
-    <string name="delete_all_bill">删除并重置所有账单</string>
+    <string name="delete_all_bill">登出</string>
     <string name="setting">设置</string>
     <string name="set_budget">设置预算</string>
     <string name="same_type_percent">同分类中占比</string>
